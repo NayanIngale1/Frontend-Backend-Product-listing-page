@@ -4,13 +4,13 @@ const router = express.Router();
 
 router.get("/list", async (req, res) => {
   try {
-    const brand = req.query;
-    const color = req.query;
-    const from = req.query || 0;
-    const to = req.query;
-    const discount = req.query;
-    const page = req.query || 1;
-    const sort = req.query;
+    const { brand } = req.query;
+    const { color } = req.query;
+    const { from } = req.query || 0;
+    const { to } = req.query;
+    const { discount } = req.query;
+    const { page } = req.query || 1;
+    const { sort } = req.query;
 
     let price;
     if (sort) {
@@ -23,12 +23,13 @@ router.get("/list", async (req, res) => {
 
     let offset = (page - 1) * 12;
 
-    let data = Product.find({
-      $and: [
-        { brand: brand },
-        { color: color },
-        { price: { $gte: from } },
-        { price: { $lte: to } },
+    let data = await Product.find({
+      $or: [
+        { brand: { $in: brand } },
+        { color: { $in: color } },
+        {
+          $and: [{ price: { $gte: from } }, { price: { $lte: to } }],
+        },
         { discount: { $lte: discount } },
       ],
     })
@@ -47,9 +48,9 @@ router.get("/list", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/list", async (req, res) => {
   try {
-    const data = Product.create(req.body);
+    const data = await Product.create(req.body);
 
     return res
       .status(201)
