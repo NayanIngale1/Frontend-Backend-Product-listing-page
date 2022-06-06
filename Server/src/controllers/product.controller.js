@@ -4,13 +4,13 @@ const router = express.Router();
 
 router.get("/list", async (req, res) => {
   try {
-    const { brand } = req.query;
-    const { color } = req.query;
-    const { from } = req.query || 0;
-    const { to } = req.query;
-    const { discount } = req.query;
-    const { page } = req.query || 1;
-    const { sort } = req.query;
+    const brand = req.query.brand || "";
+    const color = req.query.color || "";
+    const from = req.query.from || 0;
+    const to = req.query.to || 10000000;
+    const discount = req.query.discount;
+    const page = req.query.page || 1;
+    const sort = req.query.sort;
 
     let price;
     if (sort) {
@@ -21,25 +21,44 @@ router.get("/list", async (req, res) => {
       }
     }
 
-    let offset = (page - 1) * 12;
+    let offset = (page - 1) * 8;
 
     let data = await Product.find({
       $or: [
-        { brand: { $in: brand } },
-        { color: { $in: color } },
         {
-          $and: [{ price: { $gte: from } }, { price: { $lte: to } }],
+          $and: [
+            { brand: { $in: brand } },
+            { color: { $in: color } },
+
+            { discount: { $lte: discount } },
+          ],
         },
-        { discount: { $lte: discount } },
+        { price: { $gte: from } },
+        { price: { $lte: to } },
       ],
     })
       .sort({ price: price })
       .skip(offset)
-      .limit(12)
+      .limit(8)
       .lean()
       .exec();
 
-    let total_page = Math.ceil(data.length / 12);
+    let total_page = Math.ceil(
+      (await Product.find({
+        $or: [
+          {
+            $and: [
+              { brand: { $in: brand } },
+              { color: { $in: color } },
+
+              { discount: { $lte: discount } },
+            ],
+          },
+          { price: { $gte: from } },
+          { price: { $lte: to } },
+        ],
+      }).countDocuments()) / 8
+    );
 
     return res.status(200).send({ data, total_page });
   } catch (error) {
