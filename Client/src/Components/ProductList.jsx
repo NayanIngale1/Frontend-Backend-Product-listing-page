@@ -92,7 +92,7 @@ const ProductList = () => {
 
   useEffect(() => {
     getData();
-  }, [page, brand, color, from, to, sort]);
+  }, [page, brand, color, from, to, sort, search]);
 
   const getData = () => {
     fetch(
@@ -111,6 +111,13 @@ const ProductList = () => {
     buttonNum.push(i);
   }
 
+  const handlePriceChange = (e) => {
+   let [start, end] = e.target.value.split("-");
+    navigate(
+      `?brand=${brand}&color=${color}&from=${start}&to=${end}&sort=${sort}&page=${page}`
+    );
+  };
+
   return (
     <div className="productlist__container">
       <div className="productlist__filter_container">
@@ -118,60 +125,93 @@ const ProductList = () => {
         <div className="filter__brand__container">
           <h5>{">> "}Brand</h5>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand one
+            <input type="radio" name="brand" value="Roadster" />
+            Roadster
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand two
+            <input type="radio" name="brand" value="Allen Solly" />
+            Allen Solly
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand three
-          </label>
-          <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand four
+            <input type="radio" name="brand" value="Blackberrys" />
+            Blackberrys
           </label>
         </div>
         <div className="filter__brand__container">
           <h5>{">> "}Color</h5>
 
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand one
+            <input type="radio" name="color" value="white" />
+            White
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand two
+            <input type="radio" name="color" value="red" />
+            Red
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand three
+            <input type="radio" name="color" value="yellow" />
+            Yellow
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand four
+            <input type="radio" name="color" value="blue" />
+            Blue
+          </label>
+          <label className="filter__brand">
+            <input type="radio" name="color" value="black" />
+            Balck
+          </label>
+          <label className="filter__brand">
+            <input type="radio" name="color" value="gree" />
+            green
           </label>
         </div>
         <div className="filter__brand__container">
           <h5>{">> "}Price Range</h5>
 
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand one
+            <input
+              type="radio"
+              name="price"
+              value="1000-2000"
+              onChange={handlePriceChange}
+            />
+            1,000 to 2,000
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand two
+            <input
+              type="radio"
+              name="price"
+              value="2000-3000"
+              onChange={handlePriceChange}
+            />
+            2,000 to 3,000
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand three
+            <input
+              type="radio"
+              name="price"
+              value="3000-5000"
+              onChange={handlePriceChange}
+            />
+            3,000 to 5,000
           </label>
           <label className="filter__brand">
-            <input type="checkbox" name="favorite_pet" />
-            Brand four
+            <input
+              type="radio"
+              name="price"
+              value="5000-10000"
+              onChange={handlePriceChange}
+            />
+            5,000 to 10,000
+          </label>
+          <label className="filter__brand">
+            <input
+              type="radio"
+              name="price"
+              value="10000-99999999"
+              onChange={handlePriceChange}
+            />
+            above 10,000
           </label>
         </div>
       </div>
@@ -185,7 +225,7 @@ const ProductList = () => {
             className="productlist__sort"
             onChange={(e) =>
               navigate(
-                `/mens/list?brand=${brand}&color=${color}&from=${from}&to=${to}&sort=${e.target.value}&page=${page}`
+                `?brand=${brand}&color=${color}&from=${from}&to=${to}&sort=${e.target.value}&page=${page}`
               )
             }
           >
@@ -205,7 +245,7 @@ const ProductList = () => {
               onClick={() => {
                 if (page > 1) {
                   navigate(
-                    `/list?brand=${brand}&color=${color}&from=${from}&to=${to}&sort=${sort}&page=${
+                    `?brand=${brand}&color=${color}&from=${from}&to=${to}&sort=${sort}&page=${
                       page - 1
                     }`
                   );
@@ -222,7 +262,7 @@ const ProductList = () => {
                   <button
                     onClick={() => {
                       navigate(
-                        `/list?brand=${brand}&color=${color}&from=${from}&to=${to}&sort=${sort}&page=${el}`
+                        `?brand=${brand}&color=${color}&from=${from}&to=${to}&sort=${sort}&page=${el}`
                       );
                     }}
                   >

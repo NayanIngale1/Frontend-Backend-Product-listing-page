@@ -37,6 +37,7 @@ router.get("/list", async (req, res) => {
         { price: { $lte: to } },
       ],
     })
+      .sort({ _id: 1 })
       .sort({ price: price })
       .skip(offset)
       .limit(8)
